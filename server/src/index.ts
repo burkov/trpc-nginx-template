@@ -2,12 +2,12 @@
  * This is the API-handler of your app that contains all your API routes.
  * On a bigger app, you will probably want to split this file up into multiple files.
  */
-import { initTRPC } from '@trpc/server';
-import { createHTTPServer } from '@trpc/server/adapters/standalone';
+import {initTRPC} from '@trpc/server';
+import * as trpcExpress from '@trpc/server/adapters/express';
+import {z} from 'zod';
 import cors from 'cors';
-import { z } from 'zod';
+import express from 'express';
 
-const SERVER_PORT = 2022;
 const t = initTRPC.create();
 
 const publicProcedure = t.procedure;
@@ -24,7 +24,7 @@ const appRouter = router({
         })
         .nullish(),
     )
-    .query(({ input }) => {
+    .query(({input}) => {
       // This is what you're returning to your client
       return {
         text: `hello ${input?.name ?? 'world'}`,
@@ -37,11 +37,16 @@ const appRouter = router({
 // None of the actual implementation is exposed to the client
 export type AppRouter = typeof appRouter;
 
-// create server
-createHTTPServer({
-  middleware: cors(),
-  router: appRouter,
-  createContext() {
-    return {};
-  },
-}).listen(SERVER_PORT);
+const createContext = ({req, res}: trpcExpress.CreateExpressContextOptions) => ({});
+
+const app = express();
+app.use(
+  '/trpc',
+  trpcExpress.createExpressMiddleware({
+    router: appRouter,
+    middleware: cors(),
+    createContext,
+  }),
+);
+app.listen(2022);
+

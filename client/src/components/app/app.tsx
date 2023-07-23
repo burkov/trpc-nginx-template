@@ -7,7 +7,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Layout } from '../layout/layout';
 
 const SERVER_PORT = 2022;
-const url = `${window.location.protocol}//${window.location.host.replace(/:\d+/, '')}:${SERVER_PORT}`;
+const url = `${window.location.origin}/trpc`;
 
 export const App = () => {
   const [queryClient] = useState(() => new QueryClient());
