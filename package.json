@@ -1,0 +1,26 @@
+{
+  "name": "@examples/minimal-react",
+  "private": true,
+  "version": "10.35.0",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "clean": "rm -rf node_modules client/node_modules server/node_modules",
+    "build:client": "npm run build -w client",
+    "build:server": "npm run build -w server",
+    "build": "run-s build:server build:client",
+    "dev:client": "npm run dev -w client",
+    "dev:server": "npm run dev -w server",
+    "dev": "run-p dev:*",
+    "start:client": "npm run start -w client",
+    "start:server": "npm run start -w server",
+    "start": "run-p start:*"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.0.0",
+    "wait-port": "^1.0.1"
+  }
+}
